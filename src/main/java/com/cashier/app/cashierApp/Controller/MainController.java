@@ -6,18 +6,18 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.cashier.app.cashierApp.Model.Item;
 import com.cashier.app.cashierApp.Model.ItemRequest;
 import com.cashier.app.cashierApp.Model.ResponseHandler;
 import com.cashier.app.cashierApp.Repository.ItemRepository;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class MainController {
     @Autowired
@@ -74,6 +74,6 @@ public class MainController {
 
     @GetMapping("/getitem")
     public ResponseEntity<Object> getItem(){
-        return ResponseHandler.generateResponse("Success", HttpStatus.OK, itemRepository.findAllItemView());
+        return ResponseHandler.generateResponse("Success", HttpStatus.OK, itemRepository.getItemView());
     }
 }
