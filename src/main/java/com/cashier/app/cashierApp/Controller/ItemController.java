@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,7 +23,7 @@ import com.cashier.app.cashierApp.Repository.ItemRepository;
 
 @Controller
 @RequestMapping("/api")
-public class MainController {
+public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
@@ -119,4 +120,21 @@ public class MainController {
     }
 
     //delete
+    @DeleteMapping("/item")
+    public ResponseEntity<Object> deleteItem(@RequestBody ItemRequest itemRequest){
+        try {
+            String inputUUID = itemRequest.getUUID();
+            if(inputUUID == null){
+                return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, null);
+            }
+            Item deletedItem = itemRepository.findOneByUuid(inputUUID);
+    
+            itemRepository.delete(deletedItem);
+
+            return ResponseHandler.generateResponse("Delete Success", HttpStatus.OK, null);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+    }
 }
