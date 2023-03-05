@@ -33,7 +33,7 @@ public class TransactionHeader {
         this.paymentMethodId = paymentMethodId;
         this.uuid = uuid;
     }
-    
+
     public Integer getId() {
         return id;
     }

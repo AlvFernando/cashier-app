@@ -30,6 +30,12 @@ public class TransactionDetail {
         this.amount = amount;
     }
     
+    public TransactionDetail(Integer transactionHeaderId, String itemId, Integer amount) {
+        this.transactionHeaderId = transactionHeaderId;
+        this.itemId = itemId;
+        this.amount = amount;
+    }
+
     public Integer getId() {
         return id;
     }
