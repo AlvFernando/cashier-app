@@ -1,7 +1,11 @@
 package com.cashier.app.cashierApp.Controller;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,14 +46,13 @@ public class TransactionController {
     @PostMapping("/transaction")
     public ResponseEntity<Object> addTransaction(@RequestBody Transaction transaction){
         try {
-            System.out.println(transaction.getTransactionDetail().size());
             //init variable data
             Integer payment = transaction.getTransactionHeader().getPayment();
             Integer paymentMethodId = transaction.getTransactionHeader().getPaymentMethodId();
             Integer totalPrice = 0;
             Integer change = 0;
             List<Item> itemList = new ArrayList<>();
-            Instant instant = Instant.now();
+            LocalDateTime localDateTime = LocalDateTime.now();
             List<TransactionDetail> transactionDetailList = new ArrayList<>();
             
             //validation transaction header
@@ -71,14 +75,14 @@ public class TransactionController {
                 totalPrice = totalPrice+tempItem.getItemPrice();
                 itemList.add(tempItem);
             }
-            System.out.println(totalPrice);
+
             //validation payment and totalPrice
             if(totalPrice>payment){
                 return ResponseHandler.generateResponse("Payment is less than the total price", HttpStatus.BAD_REQUEST, transaction);
             }
 
             change = payment - totalPrice;
-            System.out.println(change);
+
             //generate uuid
             TransactionHeader transactionHeaderCheckByUuid;
             UUID uuid;
@@ -88,16 +92,17 @@ public class TransactionController {
                 uuidAsString = uuid.toString();
                 transactionHeaderCheckByUuid = transactionHeaderRepository.findOneByUuid(uuidAsString);
             } while (transactionHeaderCheckByUuid != null);
-            System.out.println(itemList.size());
+
             //add transaction header
             TransactionHeader transactionHeader = new TransactionHeader(
-                instant.toString(),
+                localDateTime.toString(),
                 payment,
                 paymentMethodId,
                 uuidAsString
             );
             transactionHeader = transactionHeaderRepository.save(transactionHeader);
 
+            //add transaction detail & updating stock
             for(int i=0;i<itemList.size();i++){
                 transactionDetailList.add(
                     new TransactionDetail(
@@ -106,6 +111,9 @@ public class TransactionController {
                         transaction.getTransactionDetail().get(i).getAmount()
                     )
                 );
+                //update item stock
+                itemList.get(i).setItemQty(itemList.get(i).getItemQty()-transaction.getTransactionDetail().get(i).getAmount());
+                itemRepository.save(itemList.get(i));
             }
             transactionDetailRepository.saveAll(transactionDetailList);
 
@@ -120,5 +128,18 @@ public class TransactionController {
             // TODO: handle exception
             return ResponseHandler.generateResponse("Error", HttpStatus.MULTI_STATUS, null);
         }
+    }
+
+    @GetMapping("/getdatetimenow")
+    public ResponseEntity<Object> addTransaction(){
+        Instant instant = Instant.now();
+        LocalTime localTime = LocalTime.now(ZoneId.of("GMT+07:00"));
+        LocalDateTime localDateTime = LocalDateTime.now();
+        
+        HashMap<String, String> responseData = new HashMap<>();
+        responseData.put("dateTimeNowInstant", instant.toString());
+        responseData.put("dateTimeNowLocalTime", localTime.toString());
+        responseData.put("dateTimeNowLocalDateTime", localDateTime.toString());
+        return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseData);
     }
 }

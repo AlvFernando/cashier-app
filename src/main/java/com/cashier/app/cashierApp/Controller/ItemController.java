@@ -1,6 +1,6 @@
 package com.cashier.app.cashierApp.Controller;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +44,7 @@ public class ItemController {
             String message="";
 
             //validation is there any data with same name and uuid in the database
-            Instant instant = Instant.now();
+            LocalDateTime localDateTime = LocalDateTime.now();
             Item itemCheckByName = itemRepository.findByItemName(itemRequest.getItemName());
 
             UUID uuid = UUID.randomUUID();
@@ -58,8 +58,8 @@ public class ItemController {
                     itemRequest.getItemName(),
                     itemRequest.getItemPrice(),
                     itemRequest.getItemQty(),
-                    instant.toString(),
-                    instant.toString(),
+                    localDateTime.toString(),
+                    localDateTime.toString(),
                     itemRequest.getUnitTypeId(),
                     uuidAsString);
 
@@ -100,7 +100,7 @@ public class ItemController {
         try {
             String inputUUID = itemRequest.getUUID();
 
-            Instant instant = Instant.now();
+            LocalDateTime localDateTime = LocalDateTime.now();
             if(inputUUID == null){
                 return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, null);
             }
@@ -109,7 +109,7 @@ public class ItemController {
             oldItem.setItemPrice((itemRequest.getItemPrice()!=null) ? itemRequest.getItemPrice() : oldItem.getItemPrice());
             oldItem.setItemQty((itemRequest.getItemQty()!=null) ? itemRequest.getItemQty() : oldItem.getItemQty());
             oldItem.setUnitTypeId((itemRequest.getUnitTypeId()!=null) ? itemRequest.getUnitTypeId() : oldItem.getUnitTypeId());
-            oldItem.setUpdatedAt(instant.toString());
+            oldItem.setUpdatedAt(localDateTime.toString());
 
             oldItem = itemRepository.save(oldItem);
             return ResponseHandler.generateResponse("Update Success", HttpStatus.OK, oldItem);
