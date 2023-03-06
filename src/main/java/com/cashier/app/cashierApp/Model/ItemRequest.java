@@ -1,10 +1,18 @@
 package com.cashier.app.cashierApp.Model;
 
 public class ItemRequest {
+    private String UUID;
     private String itemName;
     private Integer itemPrice;
     private Integer itemQty;
     private Integer unitTypeId;
+
+    public String getUUID() {
+        return UUID;
+    }
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
     public String getItemName() {
         return itemName;
     }
@@ -31,7 +39,7 @@ public class ItemRequest {
     }
     @Override
     public String toString() {
-        return "ItemRequest [itemName=" + itemName + ", itemPrice=" + itemPrice + ", itemQty=" + itemQty
-                + ", unitTypeId=" + unitTypeId + "]";
+        return "ItemRequest [UUID=" + UUID + ", itemName=" + itemName + ", itemPrice=" + itemPrice + ", itemQty="
+                + itemQty + ", unitTypeId=" + unitTypeId + "]";
     }
 }

@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,7 +23,7 @@ import com.cashier.app.cashierApp.Repository.ItemRepository;
 
 @Controller
 @RequestMapping("/api")
-public class MainController {
+public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
@@ -74,19 +76,65 @@ public class MainController {
         }
     }
 
-    //get item list
-    @GetMapping("/item")
+    @GetMapping("/getallitem")
     public ResponseEntity<Object> getItem(){
         try {
             List<ItemView> responseData = itemRepository.getItemView();
             return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseData);
         } catch (Exception e) {
             // TODO: handle exception
-            return ResponseHandler.generateResponse("Error", HttpStatus.MULTI_STATUS, null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
         }
     }
 
     //edit item
+    @PutMapping(value = "/item", consumes = {"application/json"})
+    public ResponseEntity<Object> updateItem(@RequestBody ItemRequest itemRequest){
+        //validation input
+        // {
+        //     uuid:xxxx,
+        //     itemPrice: 2000,
+        //     itemQty:3,
+        //     unitTypeId:1
+        // }
+        try {
+            String inputUUID = itemRequest.getUUID();
 
-    //delete item
+            Instant instant = Instant.now();
+            if(inputUUID == null){
+                return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, null);
+            }
+            Item oldItem = itemRepository.findOneByUuid(inputUUID);
+            
+            oldItem.setItemPrice((itemRequest.getItemPrice()!=null) ? itemRequest.getItemPrice() : oldItem.getItemPrice());
+            oldItem.setItemQty((itemRequest.getItemQty()!=null) ? itemRequest.getItemQty() : oldItem.getItemQty());
+            oldItem.setUnitTypeId((itemRequest.getUnitTypeId()!=null) ? itemRequest.getUnitTypeId() : oldItem.getUnitTypeId());
+            oldItem.setUpdatedAt(instant.toString());
+
+            oldItem = itemRepository.save(oldItem);
+            return ResponseHandler.generateResponse("Update Success", HttpStatus.OK, oldItem);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+    }
+
+    //delete
+    @DeleteMapping("/item")
+    public ResponseEntity<Object> deleteItem(@RequestBody ItemRequest itemRequest){
+        try {
+            String inputUUID = itemRequest.getUUID();
+            if(inputUUID == null){
+                return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, null);
+            }
+            Item deletedItem = itemRepository.findOneByUuid(inputUUID);
+    
+            itemRepository.delete(deletedItem);
+
+            return ResponseHandler.generateResponse("Delete Success", HttpStatus.OK, null);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+    }
 }
