@@ -1,6 +1,7 @@
 package com.cashier.app.cashierApp.Controller;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.cashier.app.cashierApp.Model.Item;
 import com.cashier.app.cashierApp.Model.ItemRequest;
 import com.cashier.app.cashierApp.Model.ResponseHandler;
+import com.cashier.app.cashierApp.Projection.ItemView;
 import com.cashier.app.cashierApp.Repository.ItemRepository;
 
 @Controller
@@ -72,8 +74,19 @@ public class MainController {
         }
     }
 
-    @GetMapping("/getitem")
+    //get item list
+    @GetMapping("/item")
     public ResponseEntity<Object> getItem(){
-        return ResponseHandler.generateResponse("Success", HttpStatus.OK, itemRepository.getItemView());
+        try {
+            List<ItemView> responseData = itemRepository.getItemView();
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseHandler.generateResponse("Error", HttpStatus.MULTI_STATUS, null);
+        }
     }
+
+    //edit item
+
+    //delete item
 }
