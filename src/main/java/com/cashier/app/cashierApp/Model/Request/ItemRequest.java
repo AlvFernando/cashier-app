@@ -1,4 +1,4 @@
-package com.cashier.app.cashierApp.Model;
+package com.cashier.app.cashierApp.Model.Request;
 
 public class ItemRequest {
     private String UUID;

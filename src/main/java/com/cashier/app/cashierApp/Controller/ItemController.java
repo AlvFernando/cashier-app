@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.cashier.app.cashierApp.Model.Item;
-import com.cashier.app.cashierApp.Model.ItemRequest;
 import com.cashier.app.cashierApp.Model.ResponseHandler;
+import com.cashier.app.cashierApp.Model.Entity.Item;
+import com.cashier.app.cashierApp.Model.Request.ItemRequest;
 import com.cashier.app.cashierApp.Projection.ItemView;
 import com.cashier.app.cashierApp.Repository.ItemRepository;
 

@@ -1,4 +1,4 @@
-package com.cashier.app.cashierApp.Model;
+package com.cashier.app.cashierApp.Model.Entity;
 
 import java.util.List;
 

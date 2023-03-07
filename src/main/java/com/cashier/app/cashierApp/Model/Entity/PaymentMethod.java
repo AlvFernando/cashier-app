@@ -1,4 +1,4 @@
-package com.cashier.app.cashierApp.Model;
+package com.cashier.app.cashierApp.Model.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

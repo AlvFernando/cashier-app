@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.cashier.app.cashierApp.Model.Item;
+import com.cashier.app.cashierApp.Model.Entity.Item;
 import com.cashier.app.cashierApp.Projection.ItemView;
 
 @Repository
