@@ -74,7 +74,7 @@ public class TransactionController {
                 if(transaction.getTransactionDetail().get(i).getAmount() > tempItem.getItemQty()){
                     return ResponseHandler.generateResponse("Transaction Detail Data Quantity at index "+i+" is more than the stock quantity", HttpStatus.BAD_REQUEST, transaction);
                 }
-                totalPrice = totalPrice+tempItem.getItemPrice();
+                totalPrice = totalPrice+(tempItem.getItemPrice()*transaction.getTransactionDetail().get(i).getAmount());
                 itemList.add(tempItem);
             }
 
@@ -144,8 +144,12 @@ public class TransactionController {
             List<TransactionHeader> headerData = transactionHeaderRepository.findByDate(transactionRequest.getStartDate(), transactionRequest.getEndDate());
 
             //create transaction view data
+            Integer totalPrice = 0;
+            Integer change = 0;
             for(int i=0;i<headerData.size();i++){
-               List<TransactionDetailView> detailData = transactionDetailRepository.findTransactionDetailViewByTransactionHeaderId(headerData.get(i).getId());
+                List<TransactionDetailView> detailData = transactionDetailRepository.findTransactionDetailViewByTransactionHeaderId(headerData.get(i).getId());
+                totalPrice = transactionDetailRepository.getTotalPrice(headerData.get(i).getId());
+                change = headerData.get(i).getPayment()-totalPrice;
                 responseData.add(
                     new TransactionView(
                         new TransactionHeader(
@@ -154,7 +158,9 @@ public class TransactionController {
                             headerData.get(i).getPaymentMethodId(),
                             headerData.get(i).getUuid()
                         ), 
-                        detailData)
+                        detailData,
+                        totalPrice,
+                        change)
                 );
             }
             return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseData);
