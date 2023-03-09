@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,6 +68,7 @@ public class TransactionController {
         this.templateEngine = templateEngine;
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/transaction")
     public ResponseEntity<Object> addTransaction(@RequestBody Transaction transaction){
@@ -156,6 +158,7 @@ public class TransactionController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/gettransaction")
     public ResponseEntity<Object> getAllTransaction(@RequestBody TransactionRequest transactionRequest){
         try {
@@ -211,6 +214,7 @@ public class TransactionController {
     //     .contentType(MediaType.APPLICATION_PDF)
     //     .body(bytes);
     // }
+    @CrossOrigin
     @GetMapping("/invoice")
     String InvoiceDownload(){
         return "invoiceTemplate";

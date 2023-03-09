@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ public class ItemController {
     }
 
     //inserting item
+    @CrossOrigin
     @PostMapping(value = "/item", consumes = {"application/json"})
     public ResponseEntity<Object> addItem(@RequestBody ItemRequest itemRequest){
         try {
@@ -76,6 +78,7 @@ public class ItemController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/getallitem")
     public ResponseEntity<Object> getItem(){
         try {
@@ -88,6 +91,7 @@ public class ItemController {
     }
 
     //edit item
+    @CrossOrigin
     @PutMapping(value = "/item", consumes = {"application/json"})
     public ResponseEntity<Object> updateItem(@RequestBody ItemRequest itemRequest){
         //validation input
@@ -120,6 +124,7 @@ public class ItemController {
     }
 
     //delete
+    @CrossOrigin
     @DeleteMapping("/item")
     public ResponseEntity<Object> deleteItem(@RequestBody ItemRequest itemRequest){
         try {
