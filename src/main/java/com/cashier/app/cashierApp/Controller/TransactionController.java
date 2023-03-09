@@ -1,17 +1,24 @@
 package com.cashier.app.cashierApp.Controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.cashier.app.cashierApp.Helper.DateHelper;
 import com.cashier.app.cashierApp.Model.ResponseHandler;
@@ -26,6 +33,13 @@ import com.cashier.app.cashierApp.Repository.ItemRepository;
 import com.cashier.app.cashierApp.Repository.PaymentMethodRepository;
 import com.cashier.app.cashierApp.Repository.TransactionDetailRepository;
 import com.cashier.app.cashierApp.Repository.TransactionHeaderRepository;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 
 @Controller
 @RequestMapping("/api")
@@ -45,6 +59,15 @@ public class TransactionController {
     @Autowired
     DateHelper dateHelper;
 
+    @Autowired
+    ServletContext servletContext;
+    private final TemplateEngine templateEngine;
+
+    public TransactionController(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
+    }
+
+    @Transactional
     @PostMapping("/transaction")
     public ResponseEntity<Object> addTransaction(@RequestBody Transaction transaction){
         try {
@@ -102,7 +125,8 @@ public class TransactionController {
                 paymentMethodId,
                 uuidAsString
             );
-            transactionHeader = transactionHeaderRepository.save(transactionHeader);
+            TransactionHeader transactionHeaderResponse = transactionHeader;
+            transactionHeaderRepository.save(transactionHeader);
 
             //add transaction detail & updating stock
             for(int i=0;i<itemList.size();i++){
@@ -120,7 +144,7 @@ public class TransactionController {
             transactionDetailRepository.saveAll(transactionDetailList);
 
             Transaction responseData = new Transaction(
-                transactionHeader,
+                transactionHeaderResponse,
                 transactionDetailList,
                 change
             );
@@ -168,6 +192,27 @@ public class TransactionController {
             // TODO: handle exception
             return ResponseHandler.generateResponse("Error", HttpStatus.MULTI_STATUS, null);
         }
+    }
 
+    // @GetMapping("/invoice")
+    // public ResponseEntity<?> download2(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    //     Context context = new Context();
+    //     String orderHtml = templateEngine.process("invoiceTemplate", context);
+
+    //     ByteArrayOutputStream target = new ByteArrayOutputStream();
+    //     ConverterProperties converterProperties = new ConverterProperties();
+    //     converterProperties.setBaseUri("http://localhost:8080");
+    //     /* Call convert method */
+    //     HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
+    //     byte[] bytes = target.toByteArray();
+
+    //     return ResponseEntity.ok()
+    //     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=order.pdf")
+    //     .contentType(MediaType.APPLICATION_PDF)
+    //     .body(bytes);
+    // }
+    @GetMapping("/invoice")
+    String InvoiceDownload(){
+        return "invoiceTemplate";
     }
 }
