@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,6 +68,7 @@ public class TransactionController {
         this.templateEngine = templateEngine;
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/transaction")
     public ResponseEntity<Object> addTransaction(@RequestBody Transaction transaction){
@@ -156,6 +158,7 @@ public class TransactionController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/gettransaction")
     public ResponseEntity<Object> getAllTransaction(@RequestBody TransactionRequest transactionRequest){
         try {
@@ -194,25 +197,34 @@ public class TransactionController {
         }
     }
 
-    // @GetMapping("/invoice")
-    // public ResponseEntity<?> download2(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    //     Context context = new Context();
-    //     String orderHtml = templateEngine.process("invoiceTemplate", context);
+    @CrossOrigin
+    @GetMapping("/invoice2")
+    public ResponseEntity<?> download2(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        Context context = new Context();
+        String orderHtml = templateEngine.process("invoiceTemplate", context);
 
-    //     ByteArrayOutputStream target = new ByteArrayOutputStream();
-    //     ConverterProperties converterProperties = new ConverterProperties();
-    //     converterProperties.setBaseUri("http://localhost:8080");
-    //     /* Call convert method */
-    //     HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
-    //     byte[] bytes = target.toByteArray();
+        ByteArrayOutputStream target = new ByteArrayOutputStream();
+        ConverterProperties converterProperties = new ConverterProperties();
+        converterProperties.setBaseUri("http://localhost:8080");
+        /* Call convert method */
+        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
+        byte[] bytes = target.toByteArray();
 
-    //     return ResponseEntity.ok()
-    //     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=order.pdf")
-    //     .contentType(MediaType.APPLICATION_PDF)
-    //     .body(bytes);
-    // }
+        return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=order.pdf")
+        .contentType(MediaType.APPLICATION_PDF)
+        .body(bytes);
+    }
+
+    @CrossOrigin
     @GetMapping("/invoice")
-    String InvoiceDownload(){
+    String invoiceDownload(){
         return "invoiceTemplate";
+    }
+
+    @CrossOrigin
+    @GetMapping("anotherinvoice")
+    String anotherInvoiceDownload(){
+        return "anotherinvoiceTemplate";
     }
 }

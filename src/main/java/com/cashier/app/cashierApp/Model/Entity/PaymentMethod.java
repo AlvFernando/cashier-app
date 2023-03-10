@@ -16,6 +16,14 @@ public class PaymentMethod {
     private Integer id;
     @Column(name = "paymentmethod")
     private String paymentMethod;
+
+    public PaymentMethod() {
+        super();
+    }
+
+    public PaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
     public Integer getId() {
         return id;
     }
