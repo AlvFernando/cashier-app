@@ -158,13 +158,15 @@ public class ItemController {
         try {
             String inputUUID = itemRequest.getUUID();
             if(inputUUID == null){
-                return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, null);
+                return ResponseHandler.generateResponse("UUID is required", HttpStatus.BAD_REQUEST, itemRequest);
             }
             Item deletedItem = itemRepository.findOneByUuid(inputUUID);
-    
+            if(deletedItem == null){
+                return ResponseHandler.generateResponse("Item data is not exist in database", HttpStatus.INTERNAL_SERVER_ERROR, null);
+            }
             itemRepository.delete(deletedItem);
 
-            return ResponseHandler.generateResponse("Delete Success", HttpStatus.OK, null);
+            return ResponseHandler.generateResponse("Delete Item Success", HttpStatus.OK, null);
         } catch (Exception e) {
             // TODO: handle exception
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
