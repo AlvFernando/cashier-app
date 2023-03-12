@@ -223,7 +223,7 @@ public class TransactionController {
     }
 
     @CrossOrigin
-    @GetMapping("anotherinvoice")
+    @GetMapping("/anotherinvoice")
     String anotherInvoiceDownload(){
         return "anotherinvoiceTemplate";
     }
