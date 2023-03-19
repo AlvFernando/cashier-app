@@ -1,10 +1,12 @@
 package com.cashier.app.cashierApp.Model.Entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,8 +20,10 @@ public class TransactionHeader {
     private String transactionDate;
     @Column(name = "payment")
     private Integer payment;
-    @Column(name = "paymentmethodid")
-    private Integer paymentMethodId;
+    // @Column(name = "paymentmethodid")
+    // private Integer paymentMethodId;
+    @OneToOne(cascade = CascadeType.ALL)
+    private PaymentMethod paymentMethod;
     @Column(name = "uuid")
     private String uuid;
 
@@ -27,12 +31,12 @@ public class TransactionHeader {
         super();
     }
 
-    public TransactionHeader(String transactionDate, Integer payment, Integer paymentMethodId, String uuid) {
-        this.transactionDate = transactionDate;
-        this.payment = payment;
-        this.paymentMethodId = paymentMethodId;
-        this.uuid = uuid;
-    }
+    // public TransactionHeader(String transactionDate, Integer payment, Integer paymentMethodId, String uuid) {
+    //     this.transactionDate = transactionDate;
+    //     this.payment = payment;
+    //     this.paymentMethodId = paymentMethodId;
+    //     this.uuid = uuid;
+    // }
 
     public Integer getId() {
         return id;
@@ -52,12 +56,13 @@ public class TransactionHeader {
     public void setPayment(Integer payment) {
         this.payment = payment;
     }
-    public Integer getPaymentMethodId() {
-        return paymentMethodId;
-    }
-    public void setPaymentMethodId(Integer paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
-    }
+    
+    // public Integer getPaymentMethodId() {
+    //     return paymentMethodId;
+    // }
+    // public void setPaymentMethodId(Integer paymentMethodId) {
+    //     this.paymentMethodId = paymentMethodId;
+    // }
     public String getUuid() {
         return uuid;
     }
@@ -65,9 +70,13 @@ public class TransactionHeader {
         this.uuid = uuid;
     }
 
-    @Override
-    public String toString() {
-        return "TransactionHeader [id=" + id + ", transactionDate=" + transactionDate + ", payment=" + payment
-                + ", paymentMethodId=" + paymentMethodId + ", uuid=" + uuid + "]";
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+
 }
