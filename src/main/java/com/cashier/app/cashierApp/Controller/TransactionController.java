@@ -27,6 +27,7 @@ import com.cashier.app.cashierApp.Model.Entity.Item;
 import com.cashier.app.cashierApp.Model.Entity.Transaction;
 import com.cashier.app.cashierApp.Model.Entity.TransactionDetail;
 import com.cashier.app.cashierApp.Model.Entity.TransactionHeader;
+import com.cashier.app.cashierApp.Model.Join.TransactionHeaderJoinedPaymentMethod;
 import com.cashier.app.cashierApp.Model.Request.TransactionRequest;
 import com.cashier.app.cashierApp.Projection.TransactionDetailView;
 import com.cashier.app.cashierApp.Model.View.TransactionView;
@@ -226,5 +227,17 @@ public class TransactionController {
     @GetMapping("/anotherinvoice")
     String anotherInvoiceDownload(){
         return "anotherinvoiceTemplate";
+    }
+
+    @PostMapping("/getjoined")
+    public ResponseEntity<Object> getjoined(@RequestBody TransactionRequest transactionRequest){
+        try {
+            List<TransactionHeader> responseData = transactionHeaderRepository.findByDateJoined(transactionRequest.getStartDate(), transactionRequest.getEndDate());
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.MULTI_STATUS, null);
+        }
+        
     }
 }

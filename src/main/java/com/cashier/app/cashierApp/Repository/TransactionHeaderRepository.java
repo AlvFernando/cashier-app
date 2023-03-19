@@ -17,4 +17,12 @@ public interface TransactionHeaderRepository extends CrudRepository<TransactionH
         nativeQuery = true, 
         value = "SELECT * FROM transactionheader WHERE transactiondate>=?1 AND transactiondate<=?2")
     public List<TransactionHeader> findByDate(String startDate, String endDate);
+
+    @Query(
+        nativeQuery = true, 
+        value = 
+            "SELECT th.ID, TRANSACTIONDATE, PAYMENT, PAYMENTMETHOD, UUID "+
+            "FROM transactionheader th JOIN paymentmethod pm on th.paymentmethodid=pm.id " +
+            "WHERE transactiondate>=?1 AND transactiondate<=?2")
+    public List<TransactionHeader> findByDateJoined(String startDate, String endDate);
 }
