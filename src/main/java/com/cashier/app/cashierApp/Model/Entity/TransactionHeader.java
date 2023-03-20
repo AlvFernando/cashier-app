@@ -3,9 +3,12 @@ package com.cashier.app.cashierApp.Model.Entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -20,9 +23,10 @@ public class TransactionHeader {
     private String transactionDate;
     @Column(name = "payment")
     private Integer payment;
-    // @Column(name = "paymentmethodid")
-    // private Integer paymentMethodId;
-    @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "paymentmethodid")
+    private Integer paymentMethodId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "paymentmethodid", referencedColumnName = "id", insertable = false, updatable = false)
     private PaymentMethod paymentMethod;
     @Column(name = "uuid")
     private String uuid;
@@ -57,12 +61,12 @@ public class TransactionHeader {
         this.payment = payment;
     }
     
-    // public Integer getPaymentMethodId() {
-    //     return paymentMethodId;
-    // }
-    // public void setPaymentMethodId(Integer paymentMethodId) {
-    //     this.paymentMethodId = paymentMethodId;
-    // }
+    public Integer getPaymentMethodId() {
+        return paymentMethodId;
+    }
+    public void setPaymentMethodId(Integer paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
     public String getUuid() {
         return uuid;
     }

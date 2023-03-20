@@ -16,7 +16,8 @@ public class TransactionHeaderSpecification {
 
     public static Specification<TransactionHeader> customHeaderJoined() {
         return (root, query, criteriaBuilder) -> {
-            Join<PaymentMethod, TransactionHeader> authorsBook = root.join("paymentMethod");
+            Join<PaymentMethod,TransactionHeader> authorsBook = root.join("paymentMethod");
+            //criteriaBuilder.between(root.get("transactiondate"), startDate, endDate);
             return criteriaBuilder.greaterThan(authorsBook.get("id"), 0);
         };
     }
