@@ -8,6 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.cashier.app.cashierApp.Model.Entity.TransactionHeader;
+import com.cashier.app.cashierApp.Model.View.TransactionHeaderView;
+import com.cashier.app.cashierApp.Projection.THV;
 
 @Repository
 public interface TransactionHeaderRepository extends CrudRepository<TransactionHeader,Long>, JpaSpecificationExecutor<TransactionHeader>{
@@ -19,11 +21,11 @@ public interface TransactionHeaderRepository extends CrudRepository<TransactionH
         value = "SELECT * FROM transactionheader WHERE transactiondate>=?1 AND transactiondate<=?2")
     public List<TransactionHeader> findByDate(String startDate, String endDate);
 
-    // @Query(
-    //     nativeQuery = true, 
-    //     value = 
-    //         "SELECT new com.cashier.app.cashierApp.Model.Join.TransactionHeaderJoinedPaymentMethod(th.ID, TRANSACTIONDATE, PAYMENT, PAYMENTMETHOD, UUID) "+
-    //         "FROM transactionheader th JOIN paymentmethod pm on th.paymentmethodid=pm.id " +
-    //         "WHERE transactiondate>=?1 AND transactiondate<=?2")
-    // public List<TransactionHeaderJoinedView> findByDateJoined(String startDate, String endDate);
+    @Query(
+        nativeQuery = true, 
+        value = 
+            "SELECT TRANSACTIONDATE, PAYMENT, PAYMENTMETHOD, UUID "+
+            "FROM transactionheader th JOIN paymentmethod pm on th.paymentmethodid=pm.id " +
+            "WHERE transactiondate>=?1 AND transactiondate<=?2")
+    public List<THV> findByDateJoined(String startDate, String endDate);
 }
