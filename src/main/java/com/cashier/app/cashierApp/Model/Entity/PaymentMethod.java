@@ -24,6 +24,7 @@ public class PaymentMethod {
     public PaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
     public Integer getId() {
         return id;
     }

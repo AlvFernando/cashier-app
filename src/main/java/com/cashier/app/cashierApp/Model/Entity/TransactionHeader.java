@@ -3,13 +3,11 @@ package com.cashier.app.cashierApp.Model.Entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,12 +33,19 @@ public class TransactionHeader {
         super();
     }
 
-    // public TransactionHeader(String transactionDate, Integer payment, Integer paymentMethodId, String uuid) {
-    //     this.transactionDate = transactionDate;
-    //     this.payment = payment;
-    //     this.paymentMethodId = paymentMethodId;
-    //     this.uuid = uuid;
-    // }
+    public TransactionHeader(String transactionDate, Integer payment, Integer paymentMethodId, String uuid) {
+        this.transactionDate = transactionDate;
+        this.payment = payment;
+        this.paymentMethodId = paymentMethodId;
+        this.uuid = uuid;
+    }
+
+    public TransactionHeader(String transactionDate, Integer payment, PaymentMethod paymentMethod, String uuid) {
+        this.transactionDate = transactionDate;
+        this.payment = payment;
+        this.paymentMethod = paymentMethod;
+        this.uuid = uuid;
+    }
 
     public Integer getId() {
         return id;
