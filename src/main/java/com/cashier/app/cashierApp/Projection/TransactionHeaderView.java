@@ -2,7 +2,7 @@ package com.cashier.app.cashierApp.Projection;
 
 public interface TransactionHeaderView {
     String getUuid();
-    Integer getPaymentMethodId();
+    String getPaymentMethod();
     Integer getPayment();
     String getTransactionDate(); 
 }
